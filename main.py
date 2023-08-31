@@ -37,21 +37,21 @@ def get_user(db: Session = Depends(get_db)):
 @app.post('/users', response_model=UserSchema) 
 def get_user(user:UserCreateSchemae, db: Session = Depends(get_db)):
     
-    u = Users(name = user.name, age = user.age, email = user.email, job = user.job)
-    db.add(u)
+    db_user = Users(name = user.name, age = user.age, email = user.email, job = user.job)
+    db.add(db_user)
     db.commit()
-    return u
+    return db_user
 
 
 @app.put('/users/{user_id}',response_model=UserSchema)
 def update_user(user_id: int, user:UserSchema, db: Session = Depends(get_db)):
     try:
-        u = db.query(Users).filter(Users.id==user_id).first()
-        u.name = user.name
-        u.email = user.email
-        db.add(u)
+        db_user = db.query(Users).filter(Users.id==user_id).first()
+        db_user.name = user.name
+        db_user.email = user.email
+        db.add(db_user)
         db.commit()
-        return u
+        return db_user
     except:
         return HTTPException(status_code=404, detail="User not found")
 
@@ -60,8 +60,8 @@ def update_user(user_id: int, user:UserSchema, db: Session = Depends(get_db)):
 @app.delete('/users/{user_id}', response_class=JSONResponse)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     try:
-        u = db.query(Users).filter(Users.id==user_id).first()
-        db.delete(u)
+        db_user = db.query(Users).filter(Users.id==user_id).first()
+        db.delete(db_user)
         db.commit()
         return{f'user id{user_id} deleted':True}
     except:
