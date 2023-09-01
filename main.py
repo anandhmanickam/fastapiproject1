@@ -11,6 +11,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -56,7 +57,7 @@ def update_user(user_id: int, user: UserSchema, db: Session = Depends(get_db)):
         db.commit()
         return db_use
     except:
-        return HTTPException(status_code=404, detail="User not found.")
+        return HTTPException(status_code=404, detail="User not found")
 
 
 @app.delete("/users/{user_id}", response_class=JSONResponse)
